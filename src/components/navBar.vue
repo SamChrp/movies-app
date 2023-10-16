@@ -5,11 +5,12 @@
 
 <template>
   <div class="nav-bar-container">
-    <div class="nav-bar-links"></div>
-    <div>Home</div>
-    <div>Movies</div>
-    <div>Actors</div>
-    <div>Categories</div>
+    <div class="nav-bar-links">
+      <router-link to="/" class="nav-link">Home</router-link>
+      <router-link to="/movies" class="nav-link">Movies</router-link>
+      <router-link to="/actors" class="nav-link">Actors</router-link>
+      <router-link to="/categories" class="nav-link">Categories</router-link>
+    </div>
   </div>
 </template>
 
@@ -18,8 +19,18 @@
     margin: 0;
     width: 100%;
     height: 5rem;
-    background-color: pink;
+    border-bottom: black solid 0.3px;
+  }
+
+  .nav-bar-links {
+    padding-top: 2rem;
     display: flex;
     justify-content: space-around;
   }
+
+  .nav-link {
+    text-decoration: none;
+    color: black;
+  }
+
 </style>
