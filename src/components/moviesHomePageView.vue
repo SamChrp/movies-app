@@ -14,6 +14,7 @@ onMounted(async () => {
       }
   );
   data.value = response.data;
+  console.log(toRaw(data.value));
 });
 </script>
 
