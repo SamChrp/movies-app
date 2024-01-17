@@ -32,26 +32,28 @@ const submitForm = () => {
 <template>
   <body>
   <div  class="container">
-    <h2>Connexion</h2>
-    <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="username" v-model="username" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" v-model="password" required>
-      </div>
-      <div class="form-group">
-        <button type="submit">Se Connecter</button>
-      </div>
-    </form>
+    <div  class="form-login">
+      <h2>Connexion</h2>
+      <form @submit.prevent="submitForm">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur :</label>
+          <input type="text" id="username" name="username" v-model="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe :</label>
+          <input type="password" id="password" name="password" v-model="password" required>
+        </div>
+        <div class="form-group">
+          <button type="submit">Se Connecter</button>
+        </div>
+      </form>
+    </div>
   </div>
   </body>
 </template>
 
 <style>
-body {
+.container {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
@@ -62,13 +64,14 @@ body {
   height: 100vh;
 }
 
-.container {
+.form-login {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 300px;
   text-align: center;
+
 }
 
 .form-group {
