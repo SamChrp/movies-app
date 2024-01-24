@@ -14,7 +14,7 @@ function logout() {
       <router-link to="/movies" class="nav-link">Movies</router-link>
       <router-link to="/actors" class="nav-link">Actors</router-link>
       <router-link to="/categories" class="nav-link">Categories</router-link>
-      <button @click="logout">Logout</button>
+      <button class="btn btn-primary" @click="logout">Logout</button>
     </div>
   </div>
 </template>
