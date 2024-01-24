@@ -1,7 +1,45 @@
 <script setup>
+import cardCategory from "@/components/CardCategory.vue";
+import axios from "axios";
+import { ref } from "vue";
 
+const token = localStorage.getItem('token');
+let data = ref("");
+
+const getMovies = () => {
+  const apiUrl = 'https://127.0.0.1:8000/api/categories?page=1';
+
+  axios.get(apiUrl, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+      .then(response => {
+        data.value = response.data;
+      })
+      .catch(error => {
+        console.error('Erreur lors de la requête API :', error);
+      });
+
+}
+getMovies()
 </script>
 
 <template>
-  <p>cats</p>
+  <div class="cards-container">
+    <card-category
+        v-for="category in data"
+        :key="category.id"
+        :category="category"
+    />
+  </div>
 </template>
+
+<style scoped>
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+</style>
