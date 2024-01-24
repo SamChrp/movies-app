@@ -1,5 +1,9 @@
 <script setup>
-
+function logout() {
+  console.log("logout");
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+}
 
 </script>
 
@@ -10,6 +14,7 @@
       <router-link to="/movies" class="nav-link">Movies</router-link>
       <router-link to="/actors" class="nav-link">Actors</router-link>
       <router-link to="/categories" class="nav-link">Categories</router-link>
+      <button @click="logout">Logout</button>
     </div>
   </div>
 </template>
