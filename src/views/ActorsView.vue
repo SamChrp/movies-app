@@ -6,7 +6,7 @@ import { ref } from "vue";
 const token = localStorage.getItem('token');
 let data = ref("");
 
-const getActor = () => {
+const getActors = () => {
   const apiUrl = 'https://127.0.0.1:8000/api/actors?page=1';
 
   axios.get(apiUrl, {
@@ -22,7 +22,7 @@ const getActor = () => {
         console.error('Erreur lors de la requête API :', error);
       });
 }
-getActor()
+getActors()
 </script>
 
 <template>
