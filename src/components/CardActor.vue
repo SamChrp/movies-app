@@ -8,13 +8,12 @@ const {actor} = defineProps({
   <div class="card-box">
     <h1>{{actor.firstName}} {{actor.lastName}}</h1>
     <p>Nationalité : {{actor.nationalite.intitule}}</p>
-<!--    <p>Films : <span v-for="film in actor.movies"></span> {{film.title}}</p>-->
     <p>Films : <span v-for="film in actor.movies">{{film.title}}, </span></p>
-<!--    <p>Durée du film : {{film.duration}} minutes</p>-->
-<!--    <p>Acteurs :-->
-<!--      <span v-for="actor in film.actor">{{actor.firstName}} {{actor.lastName}}, </span>-->
-<!--    </p>-->
-<!--    <p>Catégorie : {{film.category.name}}</p>-->
+    <div class="row mt-5">
+      <div class="d-flex justify-content-center">
+        <RouterLink :to="{name:'actor', params: {id:actor.id}}" class="nav-link"><button class="btn btn-primary">Détails</button></RouterLink>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -4,6 +4,7 @@ import MoviesView from "@/views/MoviesView.vue";
 import CategoriesView from "@/views/CategoriesView.vue";
 import ActorsView from "@/views/ActorsView.vue";
 import LoginView from "@/views/LoginView.vue";
+import ActorsDetailsView from "@/views/ActorsDetailsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,7 +28,14 @@ const router = createRouter({
       path: '/actors',
       name: 'actors',
       component: ActorsView
-    },    {
+    },
+    {
+      path: '/actor/:id',
+      name: 'actor',
+      meta: { requiresAuth: true },
+      component: ActorsDetailsView
+    },
+    {
       path: '/categories',
       name: 'categories',
       component: CategoriesView
