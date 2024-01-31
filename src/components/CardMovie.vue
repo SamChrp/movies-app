@@ -14,6 +14,11 @@
       <span v-for="actor in film.actor">{{actor.firstName}} {{actor.lastName}}, </span>
     </p>
     <p>Catégorie : {{film.category.name}}</p>
+    <div class="row mt-5">
+      <div class="d-flex justify-content-center">
+        <RouterLink :to="{name:'movie', params: {id:film.id}}" class="nav-link"><button class="btn btn-primary">Détails</button></RouterLink>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -21,7 +26,6 @@
   .card-box {
     padding: 1rem;
     width: 25%;
-    height: 20rem;
     background-color: whitesmoke;
     margin: 1rem;
   }
