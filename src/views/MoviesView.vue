@@ -1,38 +1,49 @@
 <script setup>
-import CardMovie from "@/components/CardMovie.vue";
-import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import CardMovie from '@/components/CardMovie.vue';
 
-const token = localStorage.getItem('token');
-let data = ref("");
+const movies = ref([]);
+const router = useRouter();
 
-const getMovies = () => {
-  const apiUrl = 'https://127.0.0.1:8000/api/movies?page=1';
+const getMovies = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/');
+      return;
+    }
 
-  axios.get(apiUrl, {
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  })
-      .then(response => {
-        data.value = response.data;
-      })
-      .catch(error => {
-        console.error('Erreur lors de la requête API :', error);
-      });
+    const response = await axios.get('https://127.0.0.1:8000/api/movies', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    });
+    movies.value = response.data;
+  } catch (error) {
+    console.error('Error', error);
+    console.log(error.response.data.code);
+    if (error.response.data.code == 401) {
+      localStorage.removeItem('token');
+      router.push('/');
+      return;
+    }
+  }
+};
 
-}
-getMovies()
+onMounted(() => {
+  getMovies();
+});
 </script>
 
 <template>
-  <div class="cards-container">
-    <card-movie
-        v-for="film in data"
-        :key="film.id"
-        :film="film"
-    />
+  <div>
+    <h1>Films</h1>
+      <div class="cards-container">
+        <CardMovie v-for="movie in movies" :key="movie.id" :movie="movie" :getMovies="getMovies" />
+      </div>
   </div>
 </template>
 
