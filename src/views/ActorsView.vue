@@ -31,6 +31,7 @@ getActors()
         v-for="actor in data"
         :key="actor.id"
         :actor="actor"
+        :getActors="getActors"
     />
   </div>
 </template>
