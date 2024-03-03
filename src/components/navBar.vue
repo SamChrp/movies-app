@@ -1,6 +1,5 @@
 <script setup>
 function logout() {
-  console.log("logout");
   localStorage.removeItem("token");
   window.location.href = "/login";
 }

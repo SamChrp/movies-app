@@ -6,7 +6,7 @@ import { ref } from "vue";
 const token = localStorage.getItem('token');
 let data = ref("");
 
-const getMovies = () => {
+const getCats = () => {
   const apiUrl = 'https://127.0.0.1:8000/api/categories?page=1';
 
   axios.get(apiUrl, {
@@ -23,7 +23,7 @@ const getMovies = () => {
       });
 
 }
-getMovies()
+getCats()
 </script>
 
 <template>
