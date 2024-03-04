@@ -27,7 +27,7 @@ const updateActor = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.push('/');
+        router.push('/front/');
         return;
       }
       const headers = {
@@ -61,7 +61,7 @@ const deleteActor = async (actorId) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
-      router.push('/');
+      router.push('/front/');
       return;
     }
     const headers = {
@@ -82,7 +82,7 @@ const deleteActor = async (actorId) => {
 <template>
   <div class="card-box">
     <h1>{{actor.firstName}} {{actor.lastName}}</h1>
-    <p>Nationalité : {{actor.nationalite.intitule}}</p>
+    <p v-if="actor.nationalite">Nationalité : {{actor.nationalite.intitule}}</p>
     <p>Films : <span v-for="film in actor.movies">{{film.title}}, </span></p>
     <div class="row mt-5">
       <div class="d-flex justify-content-center">

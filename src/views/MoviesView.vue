@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import CardMovie from '@/components/CardMovie.vue';
@@ -28,7 +28,7 @@ function closeAddMovieModal() {
 const getMovies = async () => {
   try {
     if (!token) {
-      router.push('/');
+      router.push('/front/');
       return;
     }
 
@@ -44,7 +44,7 @@ const getMovies = async () => {
     console.log(error.response.data.code);
     if (error.response.data.code == 401) {
       localStorage.removeItem('token');
-      router.push('/');
+      router.push('/front/');
       return;
     }
   }
@@ -68,7 +68,7 @@ const addMovie = async () => {
 
   try {
     if (!token) {
-      router.push('/login');
+      router.push('/front/login');
       return;
     }
     const headers = {
@@ -164,14 +164,23 @@ const methods = {
   uploadImage,
   uploadToApi
 };
+
+const searchQuery = ref('');
+
+const filteredMovies = computed(() => {
+  return movies.value.filter(movie => {
+    return movie.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+  });
+});
 </script>
 
 <template>
   <div>
     <h1>Films</h1>
+    <input type="text" v-model="searchQuery" placeholder="Rechercher un film...">
     <a class="btn btn-primary mx-4" @click="openAddMovieModal">Ajouter un film</a>
       <div class="cards-container">
-        <CardMovie v-for="movie in movies" :key="movie.id" :movie="movie" :getMovies="getMovies"/>
+        <CardMovie v-for="movie in filteredMovies" :key="movie.id" :movie="movie" :getMovies="getMovies" :actors="actors" :categories="categories"/>
       </div>
   </div>
 

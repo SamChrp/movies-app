@@ -6,46 +6,51 @@
   const {movie, getMovies} = defineProps({
     movie: Object,
     getMovies: Function,
+    actors: Array,
+    categories: Array,
   });
 
   const movies = ref([]);
   const selectedMovieId = ref(null);
-  const selectedMovie = ref(null);
-  const editedMovieTitle = ref('');
   const router = useRouter();
+  const editedMovie = ref({
+    title: '',
+    releaseDate: '',
+    description: '',
+    duration: '',
+    categories: [],
+    actors: [],
+  });
 
   const toggleDetails = (movieId) => {
     selectedMovieId.value = selectedMovieId === movieId ? null : movieId;
-    selectedMovie.value = movie.id;
-    editedMovieTitle.value = selectedMovie ? selectedMovie.title : '';
+    editedMovie.value = JSON.parse(JSON.stringify(movie));
   };
 
   function closeModal() {
     selectedMovieId.value = null;
   }
 
-  const updateMovieTitle = async () => {
-    if (selectedMovie.value && editedMovieTitle.value) {
+  const updateMovie = async () => {
+    if (editedMovie.value) {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          router.push('/');
+          router.push('/front/');
           return;
         }
         const headers = {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/merge-patch+json",
+          "Content-Type": "application/json",
         };
 
-        const updatedMovie = { title: editedMovieTitle.value };
-        await axios.patch(`http://193.168.146.5/demo-sf/api/movies/${selectedMovie.value}`, updatedMovie, { headers });
+        await axios.put(`http://193.168.146.5/demo-sf/api/movies/${editedMovie.value.id}`, editedMovie.value, { headers });
 
         getMovies();
 
-        editedMovieTitle.value = '';
-        selectedMovieId.value = null;
+        closeModal();
       } catch (error) {
-        console.error('Erreur lors de la mise à jour du titre du film :', error);
+        console.error('Erreur lors de la mise à jour du film :', error);
       }
     }
   };
@@ -54,7 +59,7 @@
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.push('/');
+        router.push('/front/');
         return;
       }
       const headers = {
@@ -91,20 +96,47 @@
     </div>
   </div>
 
+
   <div class="modal-overlay" v-if="selectedMovieId">
-    <div class="modal-content col-md-3">
+    <div class="modal-content col-md-6">
       <button class="close-button" @click="closeModal">&#10006;</button>
-      <h2 v-if="selectedMovie">{{ selectedMovie.title }}</h2>
-      <form @submit.prevent="updateMovieTitle">
-        <div class="form-group">
-          <label for="editMovieTitle">Titre du film :</label>
-          <input
-              type="text"
-              class="form-control"
-              id="editMovieTitle"
-              v-if="selectedMovie"
-              v-model="editedMovieTitle"
-          />
+      <form @submit.prevent="updateMovie">
+        <div class="row" style="width: max-content">
+          <div class="form-group col-6">
+            <label for="editMovieTitle">Titre du film :</label>
+            <input type="text" class="form-control" id="editMovieTitle" v-model="editedMovie.title"/>
+          </div>
+          <div class="form-group col-6">
+            <label for="editReleaseDate">Date de sortie :</label>
+            <input type="date" class="form-control" id="editReleaseDate" v-model="editedMovie.releaseDate"/>
+          </div>
+          <div class="form-group col-6">
+            <label for="editDescription">Description :</label>
+            <textarea class="form-control" id="editDescription" v-model="editedMovie.description"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="editDuration">Durée (en minutes) :</label>
+            <input type="text" class="form-control" id="editDuration" v-model="editedMovie.duration"/>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="editCategories">Catégories :</label>
+              <select id="categories" v-model="editedMovie.categories">
+                <option v-for="categorie in categories" :key="categorie.id" :value="categorie">{{
+                    categorie.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group form-group-actors">
+              <label class="libelle">Acteurs :</label>
+              <div v-for="actor in actors" :key="actor.id" class="actor">
+                <input type="checkbox" :id="'actor_' + actor.id" :value="actor.id" v-model="editedMovie.actors">
+                <label :for="'actor_' + actor.id">{{ actor.firstName + " " + actor.lastName }}</label>
+              </div>
+            </div>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary">Modifier</button>
       </form>
@@ -113,6 +145,32 @@
 </template>
 
 <style scoped>
+.form-group-actors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Trois colonnes égales */
+  gap: .5em; /* Espacement entre les éléments */
+  font-size: .8em;
+}
+
+.form-group-actors .libelle {
+  grid-column: 1 / -1; /* Le libellé s'étend sur toutes les colonnes */
+  font-weight: bold;
+}
+
+.actor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.form-group-actors label {
+  display: block; /* Afficher les labels sur une nouvelle ligne */
+}
+
+.form-group-actors input[type="checkbox"] {
+  margin-right: 5px; /* Espacement entre la case à cocher et le label */
+}
+
   .card-box {
     padding: 1rem;
     width: 25%;
