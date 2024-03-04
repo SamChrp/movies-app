@@ -9,7 +9,7 @@ let film = ref("");
 let id = useRoute().params.id;
 
 const getMovie = () => {
-  const apiUrl = 'https://127.0.0.1:8000/api/movie/'+id;
+  const apiUrl = 'http://193.168.146.5/demo-sf/api/movie/'+id;
 
   axios.get(apiUrl, {
     headers: {

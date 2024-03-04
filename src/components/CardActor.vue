@@ -45,7 +45,7 @@ const updateActor = async () => {
         updatedActor = { lastName: editedActorLastName.value };
       }
 
-      await axios.patch(`https://127.0.0.1:8000/api/actors/${selectedActor.value}`, updatedActor, { headers });
+      await axios.patch(`http://193.168.146.5/demo-sf/api/actors/${selectedActor.value}`, updatedActor, { headers });
 
       getActors();
 
@@ -54,6 +54,27 @@ const updateActor = async () => {
     } catch (error) {
       console.error('Erreur lors de la mise à jour du titre du film :', error);
     }
+  }
+};
+
+const deleteActor = async (actorId) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/');
+      return;
+    }
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/merge-patch+json",
+    };
+
+    await axios.delete(`http://193.168.146.5/demo-sf/api/actors/${actorId}`, { headers });
+
+    getActors();
+
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du titre du film :', error);
   }
 };
 </script>
@@ -67,6 +88,7 @@ const updateActor = async () => {
       <div class="d-flex justify-content-center">
         <RouterLink :to="{name:'actor', params: {id:actor.id}}" class="nav-link"><button class="btn btn-primary mx-4">Détails</button></RouterLink>
         <a class="btn btn-success mx-4" @click="toggleDetails(actor.id)">Modifier</a>
+        <a class="btn btn-danger mx-4" @click="deleteActor(actor.id)">Supprimer</a>
       </div>
     </div>
   </div>

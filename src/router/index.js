@@ -8,7 +8,9 @@ import ActorsDetailsView from "@/views/ActorsDetailsView.vue";
 import MovieDetailsView from "@/views/MovieDetailsView.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(`/front`),
+  base: `/front`,
   routes: [
     {
       path: '/',

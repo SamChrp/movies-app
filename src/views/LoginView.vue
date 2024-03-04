@@ -8,7 +8,7 @@ let token = ref(localStorage.getItem('token'))
 
 const submitForm = () => {
   axios
-    .post('https://localhost:8000/api/login_check', {
+    .post('http://193.168.146.5/demo-sf/api/login_check', {
     email: username.value,
     password: password.value,
 
@@ -19,7 +19,7 @@ const submitForm = () => {
     })
     .then(response => {
     localStorage.setItem('token', response.data.token);
-    location.href = '/home'
+    location.href = '/front/movies'
   })
     .catch(error => {
       console.log(username.value)

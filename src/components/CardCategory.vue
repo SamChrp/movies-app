@@ -1,4 +1,6 @@
 <script setup>
+import axios from "axios";
+
 const {category} = defineProps({
   category: Object
 });

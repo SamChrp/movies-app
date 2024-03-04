@@ -9,7 +9,7 @@ let actor = ref("");
 let id = useRoute().params.id;
 
 const getActor = () => {
-  const apiUrl = 'https://127.0.0.1:8000/api/actors/'+id;
+  const apiUrl = 'http://193.168.146.5/demo-sf/api/actors/'+id;
 
   axios.get(apiUrl, {
     headers: {
