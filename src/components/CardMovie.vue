@@ -13,18 +13,17 @@
   const movies = ref([]);
   const selectedMovieId = ref(null);
   const router = useRouter();
-  const editedMovie = ref({
-    title: '',
-    releaseDate: '',
-    description: '',
-    duration: '',
-    categories: [],
-    actors: [],
-  });
+  const selectedActorsId = ref([]);
+  const selectedCatId = ref(null);
+  const title = ref('');
+  const movieDuration = ref('');
+  const movieDescription = ref('');
+  const releaseDate = ref('');
+  const selectedMovie = ref(null);
 
   const toggleDetails = (movieId) => {
     selectedMovieId.value = selectedMovieId === movieId ? null : movieId;
-    editedMovie.value = JSON.parse(JSON.stringify(movie));
+    selectedMovie.value = movie.id;
   };
 
   function closeModal() {
@@ -32,26 +31,32 @@
   }
 
   const updateMovie = async () => {
-    if (editedMovie.value) {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          router.push('/front/');
-          return;
-        }
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        await axios.put(`http://193.168.146.5/demo-sf/api/movies/${editedMovie.value.id}`, editedMovie.value, { headers });
-
-        getMovies();
-
-        closeModal();
-      } catch (error) {
-        console.error('Erreur lors de la mise à jour du film :', error);
+    const data = {
+      title: title.value,
+      category: `/api/categories/${selectedCatId.value.id}`,
+      duration: movieDuration.value,
+      description: movieDescription.value,
+      actor: selectedActorsId.value.map(actorId => `/api/actor/${actorId}`),
+      releaseDate: releaseDate.value,
+    };
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/front/');
+        return;
       }
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      await axios.put(`http://193.168.146.5/demo-sf/api/movies/${selectedMovie.value}`, data, { headers });
+
+      getMovies();
+
+      closeModal();
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du film :', error);
     }
   };
 
@@ -104,24 +109,24 @@
         <div class="row" style="width: max-content">
           <div class="form-group col-6">
             <label for="editMovieTitle">Titre du film :</label>
-            <input type="text" class="form-control" id="editMovieTitle" v-model="editedMovie.title"/>
+            <input type="text" class="form-control" id="editMovieTitle" v-model="title"/>
           </div>
           <div class="form-group col-6">
             <label for="editReleaseDate">Date de sortie :</label>
-            <input type="date" class="form-control" id="editReleaseDate" v-model="editedMovie.releaseDate"/>
+            <input type="date" class="form-control" id="editReleaseDate" v-model="releaseDate"/>
           </div>
           <div class="form-group col-6">
             <label for="editDescription">Description :</label>
-            <textarea class="form-control" id="editDescription" v-model="editedMovie.description"></textarea>
+            <textarea class="form-control" id="editDescription" v-model="movieDescription"></textarea>
           </div>
           <div class="form-group col-6">
             <label for="editDuration">Durée (en minutes) :</label>
-            <input type="text" class="form-control" id="editDuration" v-model="editedMovie.duration"/>
+            <input type="text" class="form-control" id="editDuration" v-model="movieDuration"/>
           </div>
           <div class="col-6">
             <div class="form-group">
               <label for="editCategories">Catégories :</label>
-              <select id="categories" v-model="editedMovie.categories">
+              <select id="categories" v-model="selectedCatId">
                 <option v-for="categorie in categories" :key="categorie.id" :value="categorie">{{
                     categorie.name }}
                 </option>
@@ -132,7 +137,7 @@
             <div class="form-group form-group-actors">
               <label class="libelle">Acteurs :</label>
               <div v-for="actor in actors" :key="actor.id" class="actor">
-                <input type="checkbox" :id="'actor_' + actor.id" :value="actor.id" v-model="editedMovie.actors">
+                <input type="checkbox" :id="'actor_' + actor.id" :value="actor.id" v-model="selectedActorsId">
                 <label :for="'actor_' + actor.id">{{ actor.firstName + " " + actor.lastName }}</label>
               </div>
             </div>
