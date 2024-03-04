@@ -15,6 +15,7 @@ const selectedActorsId = ref([]);
 const movieDuration = ref("");
 const movieDescription = ref("");
 const releaseDate = ref("");
+let fileInput = ref('');
 
 const getMovies = async () => {
   try {
@@ -110,6 +111,50 @@ const getActors = () => {
         console.error('Erreur lors de la requête API :', error);
       });
 }; getActors();
+
+const uploadImage = function() {
+  const fileInput = this.refs.fileInput;
+  const file = fileInput.files[0];
+
+  if (!file) {
+    console.log("Veuillez sélectionner une image");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  // Appel de la fonction pour envoyer le media à l'API
+  this.uploadToApi(formData);
+};
+
+const uploadToApi = async function(formData) {
+  console.log(formData);
+
+  try {
+    // Récupérer le JWT depuis le local storage
+    const token = localStorage.getItem("token");
+
+    // Utilisation d'Axios pour envoyer l'image à l'API avec le JWT
+    const response = await this.axios.post("https://127.0.0.1:8000/api/media_objects", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Réponse de l'API :", response.data);
+
+    //--- RECUPERATION DE L'ID du media uploadé
+    //--- ENVOI DE L'ID du media vers le point d'API de création ou update actor / media / etc
+
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de l'image :", error);
+  }
+};
+
+const methods = {
+  uploadImage,
+  uploadToApi
+};
 </script>
 
 <template>
@@ -157,6 +202,11 @@ const getActors = () => {
     </div>
 
     <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+
+  <form @submit.prevent="uploadImage">
+    <input type="file" ref="fileInput" />
+    <button type="submit">Envoyer</button>
   </form>
 
 </template>
